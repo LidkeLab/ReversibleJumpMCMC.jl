@@ -3,5 +3,5 @@
 Documentation for RJMCMC.jl
 
 ```@autodocs
-Modules = [BAMF]
+Modules = [RJMCMC]
 ```
