@@ -3,6 +3,9 @@ uuid = "4e599b9b-5231-4225-b353-2dfd54e54db8"
 authors = ["Keith Lidke <klidke@unm.edu> and contributors"]
 version = "0.1.0"
 
+[deps]
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+
 [compat]
 julia = "1"
 
