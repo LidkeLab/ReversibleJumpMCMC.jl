@@ -14,5 +14,6 @@ makedocs(
 # for more information.
 
 deploydocs(;
-    repo="github.com/LidkeLab/RJMCMC.jl.git"
+    repo="github.com/LidkeLab/RJMCMC.jl.git",
+    devbranch = "main"
 )
