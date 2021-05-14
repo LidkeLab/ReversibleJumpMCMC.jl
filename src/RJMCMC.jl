@@ -96,6 +96,11 @@ function jtrand(rjs::RJMCMCStruct) #select a jump type
     return jt
 end
 
+"""
+    buildchain(rjs::RJMCMCStruct,mhs,intialstate)
+
+Generate RJMCMC chain and returns a RJChain struct.   
+"""
 function buildchain(rjs::RJMCMCStruct,mhs,intialstate)
     
     #init and burnin    
