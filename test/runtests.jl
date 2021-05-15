@@ -1,7 +1,7 @@
-using RJMCMC
+using ReversibleJumpMCMC
 using Test
 
-@testset "RJMCMC.jl" begin
+@testset "ReversibleJumpMCMC.jl" begin
     # Write your tests here.
     @test 1==1
 end
