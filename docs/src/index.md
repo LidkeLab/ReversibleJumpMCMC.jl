@@ -1,6 +1,6 @@
-# RJMCMC.jl
+# Overview
 
-RJMCMC.jl provides a lightweight framework for Reversible Jump Markov Chain Monte Carlo.  
+ReversibleJumpMCMC.jl provides a lightweight framework for Reversible Jump Markov Chain Monte Carlo.  
 
 The framework is based around the following code block. 
 

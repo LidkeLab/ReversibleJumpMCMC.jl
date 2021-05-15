@@ -1,7 +1,7 @@
-# RJMCMC.jl Library
+# Library
 
-Documentation for RJMCMC.jl
+Documentation for ReversibleJumpMCMC.jl
 
 ```@autodocs
-Modules = [RJMCMC]
+Modules = [ReversibleJumpMCMC]
 ```

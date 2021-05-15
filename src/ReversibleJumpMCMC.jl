@@ -1,4 +1,4 @@
-module RJMCMC
+module ReversibleJumpMCMC
 
 using Plots
 

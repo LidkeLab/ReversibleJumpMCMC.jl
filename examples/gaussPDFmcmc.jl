@@ -1,5 +1,5 @@
 # Explore a 1D Gaussian PDF using a basic MCMC chain
-using RJMCMC
+using ReversibleJumpMCMC
 using Distributions
 using Plots
 
@@ -33,13 +33,13 @@ njumptypes = 1 # number of jump types for RJMCMC
 jumpprobability = [1] # vector
 proposalfuns = [mypropose] # vector
 acceptfuns = [myaccept] # vector
-rjs = RJMCMC.RJMCMCStruct(burnin, iterations, njumptypes, jumpprobability, proposalfuns, acceptfuns)
+rjs = ReversibleJumpMCMC.RJMCMCStruct(burnin, iterations, njumptypes, jumpprobability, proposalfuns, acceptfuns)
 
 # initial state
 state0 = state1D(0f0)
 
 # run chain
-rjc = RJMCMC.buildchain(rjs, mhs, state0)
+rjc = ReversibleJumpMCMC.buildchain(rjs, mhs, state0)
 
 # extract states
 xchain = zeros(Float32, iterations)

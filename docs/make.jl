@@ -1,12 +1,12 @@
 push!(LOAD_PATH,"../src/")
 
 using Documenter
-using RJMCMC
+using ReversibleJumpMCMC
 
 makedocs(
-    sitename = "RJMCMC",
+    sitename = "ReversibleJumpMCMC",
     format = Documenter.HTML(),
-    modules = [RJMCMC]
+    modules = [ReversibleJumpMCMC]
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.
@@ -14,6 +14,6 @@ makedocs(
 # for more information.
 
 deploydocs(;
-    repo="github.com/LidkeLab/RJMCMC.jl.git",
+    repo="github.com/LidkeLab/ReversibleJumpMCMC.jl.git",
     devbranch = "main"
 )
