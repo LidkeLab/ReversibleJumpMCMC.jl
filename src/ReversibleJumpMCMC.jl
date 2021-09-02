@@ -43,6 +43,7 @@ Contains information about the chain including a vector of accepted states
 - `jumptypes::Vector{Int32} : vector of the attempted jumptype from the current state
 - `α::Vector{Float32} : vector of acceptance probabilities from proposed state 
 - `accept::Vector{Bool} : vector of results from acceptance calculation
+- 'proposedstates::Vector{Any}' : vector of proposed states
 
 """
 mutable struct RJChain  #this is the main output of RJMCMC
@@ -51,12 +52,14 @@ mutable struct RJChain  #this is the main output of RJMCMC
     jumptypes::Vector{Int32}
     α::Vector{Float32}
     accept::Vector{Bool}
+    proposedstates::Vector{Any}
 end
 RJChain(n::Int32)=RJChain(n,
 Vector{Any}(undef,n),
 zeros(Int32,n),
 Vector{Float32}(undef,n),
 Vector{Bool}(undef,n),
+Vector{Any}(undef,n)
 )
 function length(rjc::RJChain)
     return rjc.n
@@ -69,6 +72,7 @@ function initchain(rjs::RJMCMCStruct,burninchain::RJChain) #this gets last state
     newchain.accept[1]=1
     newchain.α[1]=1
     newchain.jumptypes[1]=0
+    newchain.proposedstates[1]=burninchain.states[burninchain.n]    
 return newchain
 end
 
@@ -79,6 +83,7 @@ function initchain(rjs::RJMCMCStruct,intialstate) #this initializes new chain gi
     newchain.accept[1]=1
     newchain.α[1]=1
     newchain.jumptypes[1]=0
+    newchain.proposedstates[1]=intialstate
 return newchain
 end
 
@@ -125,7 +130,8 @@ function runchain!(rjs::RJMCMCStruct,rjc::RJChain,iterations,mhs)
 
         #get proposal
         mtest,vararg=rjs.proposalfuns[jt](mhs,rjc.states[nn])     
-
+        rjc.proposedstates[nn+1]=mtest;
+        
         #calculate acceptance probability
         α=rjs.acceptfuns[jt](mhs,rjc.states[nn],mtest,vararg)
         rjc.α[nn+1]=α;
