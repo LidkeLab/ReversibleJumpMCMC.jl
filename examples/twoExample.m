@@ -11,28 +11,38 @@ mhs = MHStruct(1f0)
 
 # setup a state type
 mutable struct state1D 
-    x::Float32
+    x,y::Float32
 end
 
 # setup proposal and acceptance functions
-function mypropose(mhs::MHStruct, s::state1D)
+function mypropose1(mhs::MHStruct, s::state1D)
     teststate = state1D(s.x + mhs.σ * randn(Float32))
     return teststate, 0
 end
-function myaccept(mhs::MHStruct, s::state1D, teststate::state1D, vararg)
+function mypropose2(mhs::MHStruct, s::state1D)
+    teststate = state1D(s.y + mhs.σ * randn(Float32))
+    return teststate, 0
+end
+function myaccept1(mhs::MHStruct, s::state1D, teststate::state1D, vararg)
     σ = 5f0
     d = Normal(0f0, σ)
     α = pdf(d, teststate.x) / pdf(d, s.x)
     return α
 end
+function myaccept2(mhs::MHStruct, s::state1D, teststate::state1D, vararg)
+    σ = 5f0
+    d = Normal(0f0, σ)
+    α = pdf(d, teststate.y) / pdf(d, s.y)
+    return α
+end
 
 # setup the RJMCMCStruct
-burnin = Int32(100)
+burnin = Int32(1000)
 iterations = Int32(10000)
-njumptypes = 1 # number of jump types for RJMCMC
-jumpprobability = [1] # vector
-proposalfuns = [mypropose] # vector
-acceptfuns = [myaccept] # vector
+njumptypes = 2 # number of jump types for RJMCMC
+jumpprobability = [0.5, 0.5] # vector
+proposalfuns = [mypropose1, mypropose2] # vector
+acceptfuns = [myaccept1, myaccept2] # vector
 rjs = ReversibleJumpMCMC.RJMCMCStruct(burnin, iterations, njumptypes, jumpprobability, proposalfuns, acceptfuns)
 
 # initial state
@@ -56,7 +66,3 @@ xvec = (-20:20)
 σ = 5f0
 d = Normal(0f0, σ)
 plot!(plt,xvec,pdf.(d, xvec),label="true pdf")
-
-
-
-
