@@ -1,44 +1,51 @@
+## This is an imcomplete example
+
+
+
 # Explore a 1D Gaussian PDF using a basic MCMC chain
 using ReversibleJumpMCMC
 using Distributions
-using Plots
+using CairoMakie
 
 # setup a MH structure that gets passed around inside RJMMCMC
 struct MHStruct
-    σ::Float32 # metropolis hasting jump size
+    σ::Float64 # metropolis hasting jump size
 end
-mhs = MHStruct(1f0)
+mhs = MHStruct(1.0)
 
 # setup a state type
-mutable struct state1D 
-    x,y::Float32
+mutable struct State2Params
+    x::Float64
+    y::Float64
 end
 
 # setup proposal and acceptance functions
 function mypropose1(mhs::MHStruct, s::state1D)
-    teststate = state1D(s.x + mhs.σ * randn(Float32))
+    teststate = 
+        State2Params(s.x + mhs.σ * randn(), #updated 
+        s.y)
     return teststate, 0
 end
 function mypropose2(mhs::MHStruct, s::state1D)
-    teststate = state1D(s.y + mhs.σ * randn(Float32))
+    teststate = state1D(s.y + mhs.σ * randn())
     return teststate, 0
 end
 function myaccept1(mhs::MHStruct, s::state1D, teststate::state1D, vararg)
-    σ = 5f0
-    d = Normal(0f0, σ)
+    σ = 5.0
+    d = Normal(0.0, σ)
     α = pdf(d, teststate.x) / pdf(d, s.x)
     return α
 end
 function myaccept2(mhs::MHStruct, s::state1D, teststate::state1D, vararg)
-    σ = 5f0
-    d = Normal(0f0, σ)
+    σ = 5.0
+    d = Normal(0.0, σ)
     α = pdf(d, teststate.y) / pdf(d, s.y)
     return α
 end
 
 # setup the RJMCMCStruct
-burnin = Int32(1000)
-iterations = Int32(10000)
+burnin = 1000
+iterations = 10000
 njumptypes = 2 # number of jump types for RJMCMC
 jumpprobability = [0.5, 0.5] # vector
 proposalfuns = [mypropose1, mypropose2] # vector
@@ -52,17 +59,28 @@ state0 = state1D(0f0)
 rjc = ReversibleJumpMCMC.buildchain(rjs, mhs, state0)
 
 # extract states
-xchain = zeros(Float32, iterations)
+xchain = zeros(iterations)
 for ii = 1:iterations
     xchain[ii] = rjc.states[ii].x
 end
 
-# plot found distributions
-gr()
-plt = histogram(xchain, normalize=true, xlabel="θ", ylabel="pdf(θ",label="mcmc dist.")
 
-# true pdf
-xvec = (-20:20)
-σ = 5f0
-d = Normal(0f0, σ)
-plot!(plt,xvec,pdf.(d, xvec),label="true pdf")
+# Create the figure and axis
+fig = Figure()
+ax = Axis(fig[1, 1], xlabel="θ", ylabel="pdf(θ)")
+
+# Create the histogram
+histplot = hist!(ax, xchain, normalization=:pdf)
+
+# True pdf
+xvec = -20:0.1:20
+σ = 5.0
+d = Normal(0.0, σ)
+pdfplot = lines!(ax, xvec, pdf.(d, xvec), color=:red)
+
+# Add legend
+legend = Legend(fig, [histplot, pdfplot], ["mcmc dist.", "true pdf"])
+fig[1, 2] = legend
+
+# Display the figure
+fig
