@@ -106,7 +106,4 @@ save("pdf.png", fig) # hide
 nothing # hide
 ```
 
-
-```@raw html
-<img src="pdf.png" alt="pdf.png" width="600"/>
-```
+![](pdf.png)
