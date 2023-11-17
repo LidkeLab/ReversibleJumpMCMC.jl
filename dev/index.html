@@ -16,9 +16,9 @@ if α&gt;rand()
 else
     rjc.accept[nn+1]=0;
     rjc.states[nn+1]=rjc.states[nn];
-end</code></pre><p>A jumptype <code>jt::Int64</code> is selected from a Categorial distribution and used to select state proposal and acceptance functions.  </p><p><code>rjs::RJMCMCStruct</code> holds a vector of functions for proposal generators and acceptance calculators.    </p><p>States of the chain are accumlated in the vector <code>rjc.states</code> where <code>rjc::RJChain</code> is a struct holding the results of the RJMCMC run.  <code>mhs</code> is a user defined type, typically immutable, sent to all proposal and generator functions. <code>vararg</code> can be customized for specific proposal/acceptance functions.</p><h2 id="Basic-Usage"><a class="docs-heading-anchor" href="#Basic-Usage">Basic Usage</a><a id="Basic-Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Usage" title="Permalink"></a></h2><h3 id="D-Gaussian-PDF"><a class="docs-heading-anchor" href="#D-Gaussian-PDF">1D Gaussian PDF</a><a id="D-Gaussian-PDF-1"></a><a class="docs-heading-anchor-permalink" href="#D-Gaussian-PDF" title="Permalink"></a></h3><p>Explore a 1D Gaussian PDF using a basic MCMC chain</p><pre><code class="language- hljs">using ReversibleJumpMCMC
+end</code></pre><p>A jumptype <code>jt::Int64</code> is selected from a Categorial distribution and used to select state proposal and acceptance functions.  </p><p><code>rjs::RJMCMCStruct</code> holds a vector of functions for proposal generators and acceptance calculators.    </p><p>States of the chain are accumlated in the vector <code>rjc.states</code> where <code>rjc::RJChain</code> is a struct holding the results of the RJMCMC run.  <code>mhs</code> is a user defined type, typically immutable, sent to all proposal and generator functions. <code>vararg</code> can be customized for specific proposal/acceptance functions.</p><h2 id="Basic-Usage"><a class="docs-heading-anchor" href="#Basic-Usage">Basic Usage</a><a id="Basic-Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Usage" title="Permalink"></a></h2><h3 id="D-Gaussian-PDF"><a class="docs-heading-anchor" href="#D-Gaussian-PDF">1D Gaussian PDF</a><a id="D-Gaussian-PDF-1"></a><a class="docs-heading-anchor-permalink" href="#D-Gaussian-PDF" title="Permalink"></a></h3><p>Explore a 1D Gaussian PDF using a basic MCMC chain</p><pre><code class="language-julia hljs">using ReversibleJumpMCMC
 using Distributions
-using CairoMakie    
+using CairoMakie
 
 # setup a MH structure that gets passed around inside RJMMCMC
 struct MHStruct
@@ -27,7 +27,7 @@ end
 mhs = MHStruct(1)
 
 # setup a state type
-mutable struct state1D 
+mutable struct state1D
     x::Float64
 end
 
@@ -47,10 +47,10 @@ end
 # setup the RJMCMCStruct
 burnin = 100
 iterations = 10000
-njumptypes = 1 
-jumpprobability = Categorical([1.0]) 
-proposalfuns = [mypropose] 
-acceptfuns = [myaccept] 
+njumptypes = 1
+jumpprobability = Categorical([1.0])
+proposalfuns = [mypropose]
+acceptfuns = [myaccept]
 rjs = ReversibleJumpMCMC.RJMCMCStruct(burnin, iterations, njumptypes, jumpprobability, proposalfuns, acceptfuns)
 
 # initial state
@@ -79,6 +79,4 @@ histplot = hist!(ax, xchain, normalization=:pdf)
 pdfplot = lines!(ax, xvec, pdf.(d, xvec), color=:red)
 legend = Legend(fig, [histplot, pdfplot], [&quot;mcmc dist.&quot;, &quot;true pdf&quot;])
 fig[1, 2] = legend
-fig
-save(&quot;pdf.png&quot;, fig) # hide
-nothing # hide</code></pre><p><img src="pdf.png" alt/></p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Thursday 16 November 2023 19:55">Thursday 16 November 2023</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+fig</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">njumps = 100</code></pre><p><img src="pdf.png" alt/></p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Friday 17 November 2023 15:39">Friday 17 November 2023</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
