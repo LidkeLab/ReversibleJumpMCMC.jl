@@ -1,7 +1,7 @@
 name = "ReversibleJumpMCMC"
 uuid = "4e599b9b-5231-4225-b353-2dfd54e54db8"
 authors = ["Keith Lidke <klidke@unm.edu> and contributors"]
-version = "0.1.1"
+version = "0.2.0"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
