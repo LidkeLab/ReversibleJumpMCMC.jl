@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · ReversibleJumpMCMC</title><meta name="title" content="Home · ReversibleJumpMCMC"/><meta property="og:title" content="Home · ReversibleJumpMCMC"/><meta property="twitter:title" content="Home · ReversibleJumpMCMC"/><meta name="description" content="Documentation for ReversibleJumpMCMC."/><meta property="og:description" content="Documentation for ReversibleJumpMCMC."/><meta property="twitter:description" content="Documentation for ReversibleJumpMCMC."/><meta property="og:url" content="https://LidkeLab.github.io/ReversibleJumpMCMC.jl/"/><meta property="twitter:url" content="https://LidkeLab.github.io/ReversibleJumpMCMC.jl/"/><link rel="canonical" href="https://LidkeLab.github.io/ReversibleJumpMCMC.jl/"/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>ReversibleJumpMCMC</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Overview"><span>Overview</span></a></li><li><a class="tocitem" href="#Basic-Usage"><span>Basic Usage</span></a></li></ul></li><li><a class="tocitem" href="api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/LidkeLab/ReversibleJumpMCMC.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/LidkeLab/ReversibleJumpMCMC.jl/blob/main/docs/src/index.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Documentation-for-ReversibleJumpMCMC.jl"><a class="docs-heading-anchor" href="#Documentation-for-ReversibleJumpMCMC.jl">Documentation for ReversibleJumpMCMC.jl</a><a id="Documentation-for-ReversibleJumpMCMC.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Documentation-for-ReversibleJumpMCMC.jl" title="Permalink"></a></h1><p>ReversibleJumpMCMC.jl provides a lightweight framework for Reversible Jump Markov Chain Monte Carlo.  </p><h2 id="Overview"><a class="docs-heading-anchor" href="#Overview">Overview</a><a id="Overview-1"></a><a class="docs-heading-anchor-permalink" href="#Overview" title="Permalink"></a></h2><p>The framework is based around the following code block. </p><pre><code class="language-julia hljs"># select a jumptype
+jt=rand(rjs.jumpprobability)
+
+# propose a new state
+mtest,vararg=rjs.proposalfuns[jt](mhs,rjc.states[nn])     
+
+# calculate acceptance probability
+α=rjs.acceptfuns[jt](mhs,rjc.states[nn],mtest,vararg)
+
+# accept or reject
+rjc.α[nn+1]=α;
+if α&gt;rand()
+    rjc.accept[nn+1]=1;
+    rjc.states[nn+1]=mtest;
+else
+    rjc.accept[nn+1]=0;
+    rjc.states[nn+1]=rjc.states[nn];
+end</code></pre><p>A jumptype <code>jt::Int64</code> is selected from a Categorial distribution and used to select state proposal and acceptance functions.  </p><p><code>rjs::RJMCMCStruct</code> holds a vector of functions for proposal generators and acceptance calculators.    </p><p>States of the chain are accumlated in the vector <code>rjc.states</code> where <code>rjc::RJChain</code> is a struct holding the results of the RJMCMC run.  <code>mhs</code> is a user defined type, typically immutable, sent to all proposal and generator functions. <code>vararg</code> can be customized for specific proposal/acceptance functions.</p><h2 id="Basic-Usage"><a class="docs-heading-anchor" href="#Basic-Usage">Basic Usage</a><a id="Basic-Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Usage" title="Permalink"></a></h2><h3 id="D-Gaussian-PDF"><a class="docs-heading-anchor" href="#D-Gaussian-PDF">1D Gaussian PDF</a><a id="D-Gaussian-PDF-1"></a><a class="docs-heading-anchor-permalink" href="#D-Gaussian-PDF" title="Permalink"></a></h3><p>Explore a 1D Gaussian PDF using a basic MCMC chain</p><pre><code class="language-julia hljs">using ReversibleJumpMCMC
+using Distributions
+using CairoMakie
+
+# setup a MH structure that gets passed around inside RJMMCMC
+struct MHStruct
+    σ::Float64 # metropolis hasting jump size
+end
+mhs = MHStruct(1)
+
+# setup a state type
+mutable struct state1D
+    x::Float64
+end
+
+# setup proposal and acceptance functions
+function mypropose(mhs::MHStruct, s::state1D)
+    teststate = state1D(s.x + mhs.σ * randn())
+    return teststate, 0
+end
+
+function myaccept(mhs::MHStruct, s::state1D, teststate::state1D, vararg)
+    σ = 5.0
+    d = Normal(0.0, σ)
+    α = pdf(d, teststate.x) / pdf(d, s.x)
+    return α
+end
+
+# setup the RJMCMCStruct
+burnin = 100
+iterations = 10000
+njumptypes = 1
+jumpprobability = Categorical([1.0])
+proposalfuns = [mypropose]
+acceptfuns = [myaccept]
+rjs = ReversibleJumpMCMC.RJMCMCStruct(burnin, iterations, njumptypes, jumpprobability, proposalfuns, acceptfuns)
+
+# initial state
+state0 = state1D(0.0)
+
+# run chain
+rjc = ReversibleJumpMCMC.buildchain(rjs, mhs, state0)
+
+
+# Extract parameters from states
+xchain = zeros(Float32, iterations)
+for ii = 1:iterations
+    xchain[ii] = rjc.states[ii].x
+end
+
+# Show parameter distribution
+
+# true pdf
+xvec = -20:0.1:20
+σ = 5.0
+d = Normal(0.0, σ)
+
+fig = Figure()
+ax = Axis(fig[1, 1], xlabel=&quot;θ&quot;, ylabel=&quot;pdf(θ)&quot;)
+histplot = hist!(ax, xchain, normalization=:pdf)
+pdfplot = lines!(ax, xvec, pdf.(d, xvec), color=:red)
+legend = Legend(fig, [histplot, pdfplot], [&quot;mcmc dist.&quot;, &quot;true pdf&quot;])
+fig[1, 2] = legend
+fig</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">njumps = 100</code></pre><p><img src="pdf.png" alt/></p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.2 on <span class="colophon-date" title="Friday 17 November 2023 16:12">Friday 17 November 2023</span>. Using Julia version 1.9.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
